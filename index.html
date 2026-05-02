@@ -3,162 +3,77 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>GridFlowOps — Enterprise Release Intelligence</title>
+<title>GridFlowOps — Enterprise Release Intelligence Platform</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-
 <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
 <style>
 :root{
-  --bg:#070c0b;
+  --bg:#060b0a;
   --panel:#0c1513;
   --panel2:#0f1d1a;
-  --border:#1d3a34;
+  --border:#1c3a34;
   --text:#e6f2ef;
-  --muted:#6e9a92;
+  --muted:#6f9a92;
   --accent:#00e5b0;
-  --accent2:#00b88c;
   --warn:#f59e0b;
   --danger:#ef4444;
-  --gen:#f59e0b;
-  --tx:#38bdf8;
-  --dx:#a78bfa;
-  --bill:#fb7185;
-  --cx:#00e5b0;
-  --glow:rgba(0,229,176,0.25);
+  --info:#38bdf8;
   --mono:'IBM Plex Mono',monospace;
   --body:'IBM Plex Sans',sans-serif;
   --display:'Rajdhani',sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:radial-gradient(circle at top,#0b1513,#050a09);
-  color:var(--text);
-  font-family:var(--body);
-  overflow:hidden;
-}
 
-/* LAYOUT */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(circle at top,#0a1513,#050908);color:var(--text);font-family:var(--body);overflow:hidden}
+
 .app{display:flex;height:100vh}
 
 /* SIDEBAR */
-.sidebar{
-  width:240px;
-  background:var(--panel);
-  border-right:1px solid var(--border);
-  display:flex;
-  flex-direction:column;
-}
-.logo{
-  padding:18px;
-  border-bottom:1px solid var(--border);
-}
-.logo h1{
-  font-family:var(--display);
-  letter-spacing:2px;
-  color:var(--accent);
-  font-size:22px;
-}
-.logo span{
-  font-family:var(--mono);
-  font-size:10px;
-  color:var(--muted);
-}
-
-.nav{padding:12px}
-.nav-item{
-  padding:10px;
-  margin:6px 0;
-  border-left:2px solid transparent;
-  cursor:pointer;
-  color:var(--muted);
-  transition:.2s;
-}
+.sidebar{width:250px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.logo{padding:16px;border-bottom:1px solid var(--border)}
+.logo h1{font-family:var(--display);color:var(--accent);letter-spacing:2px;font-size:20px}
+.logo span{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.nav{padding:10px}
+.nav-item{padding:10px;margin:5px 0;cursor:pointer;color:var(--muted);border-left:2px solid transparent}
 .nav-item:hover{background:rgba(0,229,176,0.08);color:var(--text)}
 .nav-item.active{border-left:2px solid var(--accent);color:var(--accent)}
 
 /* MAIN */
 .main{flex:1;display:flex;flex-direction:column}
-.topbar{
-  height:52px;
-  background:var(--panel);
-  border-bottom:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  padding:0 16px;
-  gap:12px;
-}
-.topbar-title{font-family:var(--display);font-weight:600}
-.badge{
-  font-family:var(--mono);
-  font-size:10px;
-  padding:3px 8px;
-  border:1px solid var(--accent);
-  color:var(--accent);
-  border-radius:4px;
-}
+.topbar{height:52px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px}
+.title{font-family:var(--display);font-weight:600}
+.badge{font-family:var(--mono);font-size:10px;border:1px solid var(--accent);padding:3px 8px;color:var(--accent)}
 
-.content{flex:1;display:flex;overflow:hidden}
+.content{flex:1;display:grid;grid-template-columns:320px 1fr 320px;overflow:hidden}
 
-/* LEFT PANEL */
-.left{
-  width:320px;
-  border-right:1px solid var(--border);
-  background:var(--panel2);
-  padding:14px;
-  overflow:auto;
-}
-.card{
-  background:var(--panel);
-  border:1px solid var(--border);
-  padding:12px;
-  margin-bottom:12px;
-  border-radius:10px;
-  transition:.2s;
-}
-.card:hover{transform:translateY(-2px);border-color:var(--accent)}
-.card h3{font-family:var(--display);color:var(--accent);margin-bottom:6px}
+/* LEFT */
+.left{background:var(--panel2);padding:12px;overflow:auto;border-right:1px solid var(--border)}
+.card{background:var(--panel);border:1px solid var(--border);padding:12px;margin-bottom:10px;border-radius:10px}
+.card h3{color:var(--accent);font-family:var(--display);margin-bottom:6px}
+.small{font-size:12px;color:var(--muted)}
 
-/* GRAPH */
-.graph{
-  flex:1;
-  position:relative;
-}
-#network{
-  height:100%;
-  width:100%;
-}
+/* CENTER GRAPH */
+.center{position:relative}
+#graph{height:100%;width:100%}
 
-/* RIGHT PANEL */
-.right{
-  width:280px;
-  border-left:1px solid var(--border);
-  background:var(--panel2);
-  padding:14px;
-  overflow:auto;
-}
-
-.metric{
-  padding:10px;
-  border:1px solid var(--border);
-  margin-bottom:10px;
-  border-radius:8px;
-}
+/* RIGHT */
+.right{background:var(--panel2);padding:12px;overflow:auto;border-left:1px solid var(--border)}
+.metric{padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px}
 .metric b{color:var(--accent)}
 
-button{
-  background:var(--accent);
-  border:none;
-  padding:8px 12px;
-  color:#041a15;
-  font-family:var(--display);
-  cursor:pointer;
-  border-radius:6px;
-  font-weight:700;
-  margin-top:8px;
+button{background:var(--accent);border:none;padding:8px 10px;color:#041a15;font-family:var(--display);font-weight:700;cursor:pointer;border-radius:6px;margin-top:8px}
+button:hover{opacity:0.85}
+
+input,select,textarea{
+  width:100%;padding:8px;margin-top:6px;background:#0b1513;
+  border:1px solid var(--border);color:var(--text);border-radius:6px;
 }
-button:hover{background:var(--accent2)}
+
+/* tabs */
+.tab{display:none}
+.tab.active{display:block}
 
 </style>
 </head>
@@ -170,74 +85,81 @@ button:hover{background:var(--accent2)}
 <div class="sidebar">
   <div class="logo">
     <h1>GRIDFLOWOPS</h1>
-    <span>Release Intelligence OS</span>
+    <span>Enterprise Release OS</span>
   </div>
+
   <div class="nav">
-    <div class="nav-item active" onclick="setView('dashboard')">Dashboard</div>
-    <div class="nav-item" onclick="setView('apps')">Applications</div>
-    <div class="nav-item" onclick="setView('releases')">Releases</div>
-    <div class="nav-item" onclick="setView('graph')">Dependency Graph</div>
+    <div class="nav-item active" onclick="openTab('domains')">Domains</div>
+    <div class="nav-item" onclick="openTab('cmdb')">CMDB / CI</div>
+    <div class="nav-item" onclick="openTab('dashboard')">Release Dashboard</div>
+    <div class="nav-item" onclick="openTab('release')">Create Release</div>
+    <div class="nav-item" onclick="openTab('risk')">Impact & Risk</div>
   </div>
 </div>
 
 <!-- MAIN -->
 <div class="main">
-
 <div class="topbar">
-  <div class="topbar-title">Enterprise Control Plane</div>
-  <div class="badge">PROD SIMULATION</div>
+  <div class="title">Control Plane</div>
+  <div class="badge">LIVE SIMULATION</div>
 </div>
 
 <div class="content">
 
-<!-- LEFT -->
+<!-- LEFT PANEL -->
 <div class="left">
 
-<div id="dashboard" class="view">
-  <div class="card">
-    <h3>System Health</h3>
-    <p>Stable across all domains</p>
-  </div>
-  <div class="card">
-    <h3>High Risk Releases</h3>
-    <p style="color:var(--danger)">4 detected</p>
-  </div>
+<div id="domains" class="tab active">
+  <div class="card"><h3>Generation</h3><div class="small">12 Apps | Last Release: v2.3</div></div>
+  <div class="card"><h3>Transmission</h3><div class="small">8 Apps | Last Release: v5.1</div></div>
+  <div class="card"><h3>Distribution</h3><div class="small">15 Apps | Last Release: v3.8</div></div>
+  <div class="card"><h3>Billing</h3><div class="small">10 Apps | Last Release: v6.0</div></div>
 </div>
 
-<div id="apps" class="view" style="display:none">
-  <div class="card"><h3>Billing System</h3><p>v3.2 PROD</p></div>
-  <div class="card"><h3>OMS</h3><p>v11.0 PROD</p></div>
-  <div class="card"><h3>SCADA</h3><p>v7.5 PROD</p></div>
-</div>
-
-<div id="releases" class="view" style="display:none">
+<div id="cmdb" class="tab">
   <div class="card">
-    <h3>Billing API v3.4</h3>
-    <p>Risk: <b style="color:var(--warn)">HIGH</b></p>
-    <button onclick="simulateImpact()">Simulate Impact</button>
+    <h3>CMDB Overview</h3>
+    <div class="small">Applications + Integrations + Versions</div>
+    <button onclick="highlightGraph()">Highlight Dependencies</button>
   </div>
 </div>
 
-<div id="graph" class="view" style="display:none">
+<div id="dashboard" class="tab">
+  <div class="card"><h3>Last Releases</h3><div class="small">Billing v3.2 deployed</div></div>
+  <div class="card"><h3>Scheduled</h3><div class="small">OMS v11.2 next week</div></div>
+  <div class="card"><h3>Risk Summary</h3><div class="small">2 High Risk Deployments</div></div>
+</div>
+
+<div id="release" class="tab">
   <div class="card">
-    <h3>Live Graph</h3>
-    <p>Click nodes to explore dependencies</p>
+    <h3>Create Release</h3>
+    <input placeholder="Release Name"/>
+    <textarea placeholder="Key Changes"></textarea>
+    <select><option>Billing</option><option>Distribution</option></select>
+    <button onclick="simulate()">Analyze Impact</button>
+  </div>
+</div>
+
+<div id="risk" class="tab">
+  <div class="card">
+    <h3>Risk Engine</h3>
+    <div class="small">Auto calculated based on dependencies</div>
   </div>
 </div>
 
 </div>
 
-<!-- GRAPH -->
-<div class="graph">
-  <div id="network"></div>
+<!-- CENTER GRAPH -->
+<div class="center">
+  <div id="graph"></div>
 </div>
 
-<!-- RIGHT -->
+<!-- RIGHT PANEL -->
 <div class="right">
-  <div class="metric"><b>12</b> Systems Impacted</div>
-  <div class="metric"><b>5</b> Critical Dependencies</div>
-  <div class="metric"><b>82</b> Risk Score</div>
-  <div class="metric"><b>3</b> Domains Affected</div>
+  <div class="metric"><b>18</b> Applications</div>
+  <div class="metric"><b>42</b> Integrations</div>
+  <div class="metric"><b>3</b> High Risk Releases</div>
+  <div class="metric"><b>92</b> Risk Score Avg</div>
 </div>
 
 </div>
@@ -245,35 +167,37 @@ button:hover{background:var(--accent2)}
 
 <script>
 
-function setView(v){
-  document.querySelectorAll('.view').forEach(x=>x.style.display='none');
-  document.getElementById(v).style.display='block';
+function openTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-function simulateImpact(){
-  alert("Impact Simulation: OMS, CRM, Metering affected!");
+function simulate(){
+  alert("Impact Analysis: Billing → CRM → Metering affected");
 }
 
-const nodes = new vis.DataSet([
+function highlightGraph(){
+  alert("CMDB dependencies highlighted in graph");
+}
+
+const nodes=new vis.DataSet([
   {id:1,label:"Billing"},
   {id:2,label:"CRM"},
   {id:3,label:"OMS"},
   {id:4,label:"Metering"},
-  {id:5,label:"SCADA"}
+  {id:5,label:"SCADA"},
+  {id:6,label:"Grid Control"}
 ]);
 
-const edges = new vis.DataSet([
-  {from:1,to:2},
-  {from:2,to:4},
-  {from:3,to:4},
-  {from:5,to:3}
+const edges=new vis.DataSet([
+  {from:1,to:2},{from:2,to:4},{from:3,to:4},{from:5,to:3},{from:6,to:5}
 ]);
 
-const container=document.getElementById("network");
+const container=document.getElementById('graph');
 const data={nodes,edges};
 
 const options={
-  nodes:{color:{background:'#00e5b0',border:'#0f766e'},font:{color:'#e6f2ef'}},
+  nodes:{color:{background:'#00e5b0',border:'#0b7a63'},font:{color:'#e6f2ef'}},
   edges:{color:'#1f3b36'},
   physics:{stabilization:false}
 };
