@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GridFlowOps Prototype</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    header {
+      background: #111827;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1f2937;
+    }
+
+    header h1 {
+      font-size: 18px;
+      margin: 0;
+      color: #38bdf8;
+    }
+
+    nav button {
+      background: #1f2937;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      margin-left: 8px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    nav button:hover {
+      background: #334155;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #38bdf8;
+    }
+
+    .badge {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      display: inline-block;
+    }
+
+    .red { background: #7f1d1d; }
+    .yellow { background: #78350f; }
+    .green { background: #14532d; }
+
+    .hidden {
+      display: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    table, th, td {
+      border: 1px solid #334155;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    .graph {
+      background: #111827;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      border: 1px solid #334155;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>GridFlowOps Prototype</h1>
+  <nav>
+    <button onclick="showPage('dashboard')">Dashboard</button>
+    <button onclick="showPage('apps')">Applications</button>
+    <button onclick="showPage('releases')">Releases</button>
+    <button onclick="showPage('graph')">Dependency Graph</button>
+  </nav>
+</header>
+
+<div class="container">
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="page">
+    <h2>Release Intelligence Dashboard</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Upcoming Releases</h3>
+        <p>5 Scheduled</p>
+      </div>
+      <div class="card">
+        <h3>High Risk Releases</h3>
+        <p><span class="badge red">3 Critical</span></p>
+      </div>
+      <div class="card">
+        <h3>Version Drift</h3>
+        <p><span class="badge yellow">2 Systems</span></p>
+      </div>
+      <div class="card">
+        <h3>System Health</h3>
+        <p><span class="badge green">Stable</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPS -->
+  <div id="apps" class="page hidden">
+    <h2>Applications</h2>
+    <table>
+      <tr><th>Name</th><th>Domain</th><th>Version PROD</th></tr>
+      <tr><td>Billing System</td><td>Billing</td><td>v3.2</td></tr>
+      <tr><td>OMS</td><td>Distribution</td><td>v11.0</td></tr>
+      <tr><td>SCADA</td><td>Transmission</td><td>v7.5</td></tr>
+      <tr><td>CRM</td><td>Customer Care</td><td>v5.1</td></tr>
+    </table>
+  </div>
+
+  <!-- RELEASES -->
+  <div id="releases" class="page hidden">
+    <h2>Release Management</h2>
+    <div class="card">
+      <h3>Billing API Upgrade v3.3</h3>
+      <p>Status: <span class="badge yellow">Scheduled</span></p>
+      <p>Impact: OMS, CRM, Metering</p>
+      <p>Risk Score: <b>78 / 100</b></p>
+      <button onclick="alert('Approval simulated')">Approve Release</button>
+    </div>
+
+    <div class="card">
+      <h3>OMS Patch v11.1</h3>
+      <p>Status: <span class="badge green">Approved</span></p>
+      <p>Impact: Distribution Systems</p>
+      <p>Risk Score: <b>35 / 100</b></p>
+    </div>
+  </div>
+
+  <!-- GRAPH -->
+  <div id="graph" class="page hidden">
+    <h2>Dependency Graph (Mock)</h2>
+    <div class="graph">
+      <p>Billing System → CRM → Customer Portal</p>
+      <p>OMS → Metering → Billing</p>
+      <p>SCADA → Grid Control → OMS</p>
+      <br/>
+      <p><b>(Interactive graph will be added in next version)</b></p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  document.getElementById(page).classList.remove('hidden');
+}
+</script>
+
+</body>
+</html>
