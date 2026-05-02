@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>GridFlowOps — Utility Release Intelligence Control Plane</title>
+<title>GridFlowOps — Release Ops Platform</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
 <style>
 :root{
   --bg:#050a09;
   --panel:#0c1513;
   --panel2:#0f1d1a;
+  --panel3:#0b1412;
   --border:#1b3a33;
+  --border2:#24473f;
   --text:#e6f2ef;
   --muted:#6f9a92;
   --accent:#00e5b0;
@@ -33,193 +34,357 @@ body{
   overflow:hidden;
 }
 
-/* TOPBAR */
+/* APP LAYOUT */
+.app{display:flex;height:100vh}
+
+/* SIDEBAR */
+.sidebar{
+  width:260px;
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+}
+
+.logo{
+  padding:16px;
+  border-bottom:1px solid var(--border);
+}
+.logo h1{
+  font-family:var(--display);
+  letter-spacing:2px;
+  color:var(--accent);
+  font-size:20px;
+}
+.logo small{
+  font-family:var(--mono);
+  color:var(--muted);
+  font-size:10px;
+}
+
+.nav{
+  padding:10px;
+  flex:1;
+}
+.nav-item{
+  padding:10px;
+  margin:6px 0;
+  cursor:pointer;
+  color:var(--muted);
+  border-left:2px solid transparent;
+  transition:.2s;
+}
+.nav-item:hover{background:rgba(0,229,176,0.08);color:var(--text)}
+.nav-item.active{border-left:2px solid var(--accent);color:var(--accent)}
+
+/* MAIN */
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
 .topbar{
   height:56px;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding:0 16px;
-  background:var(--panel);
-  border-bottom:1px solid var(--border);
 }
-.logo{
+
+.title{
   font-family:var(--display);
-  font-size:20px;
-  letter-spacing:2px;
-  color:var(--accent);
+  font-weight:600;
+  letter-spacing:1px;
 }
-.subtitle{
-  font-size:11px;
+
+.meta{
   font-family:var(--mono);
+  font-size:11px;
   color:var(--muted);
 }
 
-/* MAIN */
-.container{
+/* WIZARD STEPS */
+.steps{
+  display:flex;
+  gap:10px;
+  padding:12px 16px;
+  background:var(--panel2);
+  border-bottom:1px solid var(--border);
+}
+.step{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--muted);
+}
+.step.active{
+  border-color:var(--accent);
+  color:var(--accent);
+  box-shadow:0 0 0 1px rgba(0,229,176,0.1);
+}
+.step-num{
+  width:24px;height:24px;
+  border-radius:50%;
+  border:1px solid var(--border2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--mono);
+  font-size:11px;
+}
+.step.active .step-num{
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+/* CONTENT */
+.content{
+  flex:1;
   display:grid;
-  grid-template-columns:1fr;
-  height:calc(100vh - 56px);
+  grid-template-columns:1.2fr 1fr;
+  overflow:hidden;
 }
 
-/* ARCHITECTURE LAYER */
-.architecture{
-  position:relative;
-  height:100%;
+/* LEFT FORM */
+.form-area{
+  padding:16px;
+  overflow:auto;
 }
-
-#network{
-  height:100%;
-  width:100%;
-}
-
-/* FLOATING PANEL */
-.panel{
-  position:absolute;
-  top:20px;
-  right:20px;
-  width:280px;
+.section{
   background:var(--panel);
   border:1px solid var(--border);
-  padding:12px;
-  border-radius:12px;
-  z-index:10;
+  padding:14px;
+  border-radius:10px;
+  margin-bottom:14px;
 }
-.panel h3{
+.section h3{
   font-family:var(--display);
   color:var(--accent);
   margin-bottom:10px;
 }
-.card{
-  padding:8px;
-  border:1px solid var(--border);
-  margin-bottom:8px;
-  border-radius:8px;
-  cursor:pointer;
-  transition:0.2s;
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
 }
-.card:hover{
+
+label{
+  font-size:11px;
+  color:var(--muted);
+  font-family:var(--mono);
+}
+
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  background:var(--panel3);
+  border:1px solid var(--border);
+  color:var(--text);
+  border-radius:8px;
+  outline:none;
+}
+
+textarea{min-height:80px;resize:none}
+
+/* DOMAIN CARDS */
+.domains{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.domain{
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  cursor:pointer;
+  transition:.2s;
+  background:var(--panel3);
+}
+.domain:hover{
   border-color:var(--accent);
   transform:translateY(-2px);
 }
-.card small{
-  color:var(--muted);
+.domain b{color:var(--text)}
+.domain small{color:var(--muted)}
+
+/* RIGHT PANEL */
+.right{
+  background:var(--panel2);
+  border-left:1px solid var(--border);
+  padding:16px;
+  overflow:auto;
 }
 
-/* PLUS BUTTONS */
-.plus{
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  background:var(--accent);
-  color:#041a15;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:14px;
-  cursor:pointer;
-  position:absolute;
-  box-shadow:0 0 12px rgba(0,229,176,0.4);
-  transition:0.2s;
+.kpi{
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
 }
-.plus:hover{
-  transform:scale(1.2);
+.kpi b{color:var(--accent)}
+
+.btn{
+  width:100%;
+  padding:12px;
+  background:var(--accent);
+  border:none;
+  color:#041a15;
+  font-weight:700;
+  font-family:var(--display);
+  border-radius:8px;
+  cursor:pointer;
+  margin-top:10px;
+}
+.btn:hover{background:var(--accent2)}
+
+.progress{
+  height:6px;
+  background:#0b1412;
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  margin:10px 0;
+}
+.bar{
+  width:35%;
+  height:100%;
+  background:var(--accent);
 }
 
 </style>
 </head>
 <body>
 
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">
+    <h1>GRIDFLOW</h1>
+    <small>RELEASE OPS PLATFORM</small>
+  </div>
+  <div class="nav">
+    <div class="nav-item">Dashboard</div>
+    <div class="nav-item active">New Release</div>
+    <div class="nav-item">Pipelines</div>
+    <div class="nav-item">Approvals</div>
+    <div class="nav-item">Rollback</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
 <div class="topbar">
-  <div>
-    <div class="logo">GRIDFLOWOPS</div>
-    <div class="subtitle">Utility Enterprise Release Intelligence Control Plane</div>
+  <div class="title">Create New Release</div>
+  <div class="meta">PROD — Q2 2026</div>
+</div>
+
+<div class="steps">
+  <div class="step active"><div class="step-num">1</div>Define</div>
+  <div class="step"><div class="step-num">2</div>Impact</div>
+  <div class="step"><div class="step-num">3</div>Risk</div>
+  <div class="step"><div class="step-num">4</div>Dependencies</div>
+  <div class="step"><div class="step-num">5</div>Approval</div>
+</div>
+
+<div class="content">
+
+<!-- FORM LEFT -->
+<div class="form-area">
+
+<div class="section">
+<h3>Release Definition</h3>
+
+<label>Select Domain</label>
+<div class="domains">
+  <div class="domain"><b>Generation</b><br><small>14 apps</small></div>
+  <div class="domain"><b>Transmission</b><br><small>9 apps</small></div>
+  <div class="domain"><b>Distribution</b><br><small>22 apps</small></div>
+  <div class="domain"><b>Billing</b><br><small>11 apps</small></div>
+</div>
+
+</div>
+
+<div class="section">
+<h3>Release Metadata</h3>
+<div class="grid2">
+<div>
+<label>Application / Integration</label>
+<input placeholder="Select system" />
+</div>
+<div>
+<label>Release Type</label>
+<select><option>Major</option><option>Minor</option><option>Patch</option></select>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="grid2">
+<div>
+<label>Current Version</label>
+<input placeholder="v4.2.1" />
+</div>
+<div>
+<label>Target Version</label>
+<input placeholder="v4.3.0" />
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="grid2">
+<div>
+<label>Environment</label>
+<select><option>DEV</option><option>QA</option><option>UAT</option><option>PROD</option></select>
+</div>
+<div>
+<label>Scheduled Date</label>
+<input type="date" />
+</div>
+</div>
+</div>
+
+<div class="section">
+<label>Release Description</label>
+<textarea placeholder="Describe key changes, APIs, integrations..."></textarea>
+</div>
+
+<button class="btn">Run Impact & Risk Analysis</button>
+
+</div>
+
+<!-- RIGHT KPI -->
+<div class="right">
+  <div class="kpi"><b>6</b> Systems Selected</div>
+  <div class="kpi"><b>14</b> Dependencies Detected</div>
+  <div class="kpi"><b>78</b> Risk Score</div>
+  <div class="kpi"><b>3</b> Domains Impacted</div>
+
+  <div class="section">
+    <h3>Progress</h3>
+    <div class="progress"><div class="bar"></div></div>
   </div>
+
+  <button class="btn">Submit to Pipeline</button>
 </div>
-
-<div class="container">
-
-<div class="architecture">
-  <div id="network"></div>
-
-  <div class="panel">
-    <h3>Release Actions</h3>
-    <div class="card" onclick="createRelease('Generation')">
-      Generation <small>Click to create release</small>
-    </div>
-    <div class="card" onclick="createRelease('Transmission')">
-      Transmission <small>Click to create release</small>
-    </div>
-    <div class="card" onclick="createRelease('Distribution')">
-      Distribution <small>Click to create release</small>
-    </div>
-    <div class="card" onclick="createRelease('Billing')">
-      Billing <small>Click to create release</small>
-    </div>
-  </div>
 
 </div>
 
 </div>
 
-<script>
-
-function createRelease(domain){
-  alert("Create Release triggered for: " + domain + "\nYou can now add apps, integrations, systems.");
-}
-
-const nodes = new vis.DataSet([
-  { id: 1, label: "Generation", color:'#00e5b0' },
-  { id: 2, label: "Transmission", color:'#38bdf8' },
-  { id: 3, label: "Distribution", color:'#a78bfa' },
-  { id: 4, label: "Billing", color:'#fb7185' },
-  { id: 5, label: "Customer Care", color:'#f59e0b' },
-
-  { id: 6, label: "SCADA" },
-  { id: 7, label: "Grid Control" },
-  { id: 8, label: "OMS" },
-  { id: 9, label: "CRM" },
-  { id: 10, label: "Metering" }
-]);
-
-const edges = new vis.DataSet([
-  { from:1,to:6 },
-  { from:6,to:7 },
-  { from:7,to:2 },
-  { from:2,to:8 },
-  { from:8,to:3 },
-  { from:3,to:10 },
-  { from:10,to:4 },
-  { from:4,to:9 },
-  { from:9,to:5 }
-]);
-
-const container = document.getElementById("network");
-
-const data = { nodes, edges };
-
-const options = {
-  nodes:{
-    shape:"dot",
-    size:18,
-    font:{color:"#e6f2ef"},
-    borderWidth:1
-  },
-  edges:{color:"#1f3b36"},
-  physics:{stabilization:false}
-};
-
-const network = new vis.Network(container, data, options);
-
-// Add click interaction
-network.on("click", function(params){
-  if(params.nodes.length){
-    alert("Selected system: " + nodes.get(params.nodes[0]).label);
-  }
-});
-
-</script>
+</div>
 
 </body>
 </html>
