@@ -3,28 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GridFlowOps Prototype</title>
+  <title>GridFlowOps - SaaS Prototype</title>
+
+  <!-- Vis Network for Graph -->
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
+      background: #0b1220;
+      color: #e5e7eb;
     }
 
     header {
-      background: #111827;
-      padding: 15px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 14px 20px;
+      background: #0f172a;
       border-bottom: 1px solid #1f2937;
     }
 
     header h1 {
       font-size: 18px;
-      margin: 0;
       color: #38bdf8;
+      margin: 0;
     }
 
     nav button {
@@ -33,12 +37,14 @@
       border: none;
       padding: 8px 12px;
       margin-left: 8px;
+      border-radius: 8px;
       cursor: pointer;
-      border-radius: 6px;
+      transition: 0.2s;
     }
 
     nav button:hover {
       background: #334155;
+      transform: translateY(-1px);
     }
 
     .container {
@@ -52,10 +58,16 @@
     }
 
     .card {
-      background: #1e293b;
+      background: #111827;
       padding: 15px;
-      border-radius: 10px;
-      border: 1px solid #334155;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #38bdf8;
     }
 
     .card h3 {
@@ -64,19 +76,16 @@
     }
 
     .badge {
-      padding: 3px 8px;
+      padding: 4px 8px;
       border-radius: 6px;
       font-size: 12px;
-      display: inline-block;
     }
 
     .red { background: #7f1d1d; }
     .yellow { background: #78350f; }
     .green { background: #14532d; }
 
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
 
     table {
       width: 100%;
@@ -84,28 +93,36 @@
       margin-top: 10px;
     }
 
-    table, th, td {
-      border: 1px solid #334155;
-    }
-
     th, td {
-      padding: 8px;
-      text-align: left;
+      border: 1px solid #1f2937;
+      padding: 10px;
     }
 
-    .graph {
+    th {
       background: #111827;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      border: 1px solid #334155;
+    }
+
+    #graph {
+      height: 600px;
+      border-radius: 12px;
+      background: #0f172a;
+      border: 1px solid #1f2937;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>GridFlowOps Prototype</h1>
+  <h1>GridFlowOps - Release Intelligence</h1>
   <nav>
     <button onclick="showPage('dashboard')">Dashboard</button>
     <button onclick="showPage('apps')">Applications</button>
@@ -117,33 +134,21 @@
 <div class="container">
 
   <!-- DASHBOARD -->
-  <div id="dashboard" class="page">
-    <h2>Release Intelligence Dashboard</h2>
+  <div id="dashboard" class="page fade-in">
+    <h2>Operational Overview</h2>
     <div class="grid">
-      <div class="card">
-        <h3>Upcoming Releases</h3>
-        <p>5 Scheduled</p>
-      </div>
-      <div class="card">
-        <h3>High Risk Releases</h3>
-        <p><span class="badge red">3 Critical</span></p>
-      </div>
-      <div class="card">
-        <h3>Version Drift</h3>
-        <p><span class="badge yellow">2 Systems</span></p>
-      </div>
-      <div class="card">
-        <h3>System Health</h3>
-        <p><span class="badge green">Stable</span></p>
-      </div>
+      <div class="card"><h3>Upcoming Releases</h3><p>6 Scheduled</p></div>
+      <div class="card"><h3>High Risk</h3><p><span class="badge red">4 Critical</span></p></div>
+      <div class="card"><h3>Version Drift</h3><p><span class="badge yellow">3 Detected</span></p></div>
+      <div class="card"><h3>System Health</h3><p><span class="badge green">Stable</span></p></div>
     </div>
   </div>
 
   <!-- APPS -->
   <div id="apps" class="page hidden">
-    <h2>Applications</h2>
+    <h2>Application Inventory</h2>
     <table>
-      <tr><th>Name</th><th>Domain</th><th>Version PROD</th></tr>
+      <tr><th>Application</th><th>Domain</th><th>Prod Version</th></tr>
       <tr><td>Billing System</td><td>Billing</td><td>v3.2</td></tr>
       <tr><td>OMS</td><td>Distribution</td><td>v11.0</td></tr>
       <tr><td>SCADA</td><td>Transmission</td><td>v7.5</td></tr>
@@ -153,33 +158,29 @@
 
   <!-- RELEASES -->
   <div id="releases" class="page hidden">
-    <h2>Release Management</h2>
+    <h2>Release Intelligence</h2>
+
     <div class="card">
-      <h3>Billing API Upgrade v3.3</h3>
+      <h3>Billing API v3.3 Upgrade</h3>
       <p>Status: <span class="badge yellow">Scheduled</span></p>
-      <p>Impact: OMS, CRM, Metering</p>
-      <p>Risk Score: <b>78 / 100</b></p>
-      <button onclick="alert('Approval simulated')">Approve Release</button>
+      <p>Impacts: OMS → CRM → Metering</p>
+      <p>Risk Score: <b>82 / 100</b></p>
+      <button onclick="alert('Release Approved (simulation)')">Approve</button>
     </div>
 
     <div class="card">
       <h3>OMS Patch v11.1</h3>
       <p>Status: <span class="badge green">Approved</span></p>
-      <p>Impact: Distribution Systems</p>
-      <p>Risk Score: <b>35 / 100</b></p>
+      <p>Impacts: Distribution Systems</p>
+      <p>Risk Score: <b>41 / 100</b></p>
     </div>
+
   </div>
 
   <!-- GRAPH -->
   <div id="graph" class="page hidden">
-    <h2>Dependency Graph (Mock)</h2>
-    <div class="graph">
-      <p>Billing System → CRM → Customer Portal</p>
-      <p>OMS → Metering → Billing</p>
-      <p>SCADA → Grid Control → OMS</p>
-      <br/>
-      <p><b>(Interactive graph will be added in next version)</b></p>
-    </div>
+    <h2>Live Dependency Graph</h2>
+    <div id="network"></div>
   </div>
 
 </div>
@@ -188,6 +189,45 @@
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
   document.getElementById(page).classList.remove('hidden');
+
+  if(page === 'graph') loadGraph();
+}
+
+function loadGraph() {
+  const nodes = new vis.DataSet([
+    { id: 1, label: 'Billing System' },
+    { id: 2, label: 'OMS' },
+    { id: 3, label: 'CRM' },
+    { id: 4, label: 'Metering' },
+    { id: 5, label: 'SCADA' }
+  ]);
+
+  const edges = new vis.DataSet([
+    { from: 1, to: 3 },
+    { from: 3, to: 4 },
+    { from: 2, to: 4 },
+    { from: 5, to: 2 }
+  ]);
+
+  const container = document.getElementById('network');
+
+  const data = { nodes, edges };
+
+  const options = {
+    nodes: {
+      shape: 'dot',
+      size: 18,
+      color: '#38bdf8'
+    },
+    edges: {
+      color: '#64748b'
+    },
+    physics: {
+      stabilization: false
+    }
+  };
+
+  new vis.Network(container, data, options);
 }
 </script>
 
